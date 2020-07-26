@@ -11,7 +11,7 @@ import Jama.*;
 import common.SimpleTools;
 
 /**
- * Self-paced regressor. <br>
+ * Self-paced regression. <br>
  * Project: Self-paced learning.<br>
  * 
  * @author Fan Min<br>
@@ -169,7 +169,7 @@ public class SelfPacedRegressor {
 		// Step 1. Build the original hyperplane.
 		System.out.println("Training ... the training set has " + trainingX.length + " instances.");
 		weights = train(trainingX, trainingY);
-		System.out.println("All data, the weights are: " + Arrays.toString(weights));
+		//System.out.println("All data, the weights are: " + Arrays.toString(weights));
 		double tempMAE = computeTestingMae();
 		System.out.println("The MAE with all training data is: " + tempMAE);
 
@@ -206,8 +206,8 @@ public class SelfPacedRegressor {
 		} // Of for i
 
 		System.out.println("Finally, the threshold is " + tempDistanceThreshold
-				+ " with " + tempNumNeighbors + " neighbors."
-				+ "\r\n\tThe weights are: " + Arrays.toString(weights));
+				+ " with " + tempNumNeighbors + " neighbors.");
+		//System.out.println("The weights are: " + Arrays.toString(weights));
 		return weights;
 	}// Of train
 
@@ -333,7 +333,10 @@ public class SelfPacedRegressor {
 	 */
 	public static void main(String args[]) {
 		System.out.println("Starting self-paced regression ...");
-		SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/iris.arff");
+		//SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/iris.arff");
+		//SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/meta-test/500s.arff");
+		SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/meta-test/kin8nm.arff");
+		
 		// SelfPacedRegressor tempSelfPacedRegressor = new
 		// SelfPacedRegressor("src/data/iris.arff", 200);
 
