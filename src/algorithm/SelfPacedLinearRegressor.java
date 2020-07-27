@@ -22,7 +22,7 @@ import common.SimpleTools;
  * @version 1.0
  */
 
-public class SelfPacedRegressor {
+public class SelfPacedLinearRegressor {
 
 	/**
 	 * The whole input data. The first column is always 1.
@@ -77,7 +77,7 @@ public class SelfPacedRegressor {
 	 *            The data filename.
 	 ****************** 
 	 */
-	public SelfPacedRegressor(String paraTrainingFilename) {
+	public SelfPacedLinearRegressor(String paraTrainingFilename) {
 		Instances data = null;
 		// Step 1. Read training set.
 		try {
@@ -333,22 +333,22 @@ public class SelfPacedRegressor {
 	 */
 	public static void main(String args[]) {
 		System.out.println("Starting self-paced regression ...");
-		//SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/iris.arff");
-		//SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/meta-test/500s.arff");
-		SelfPacedRegressor tempSelfPacedRegressor = new SelfPacedRegressor("src/data/meta-test/kin8nm.arff");
+		//SelfPacedLinearRegressor tempSelfPacedLinearRegressor = new SelfPacedLinearRegressor("src/data/iris.arff");
+		//SelfPacedLinearRegressor tempSelfPacedLinearRegressor = new SelfPacedLinearRegressor("src/data/meta-test/500s.arff");
+		SelfPacedLinearRegressor tempSelfPacedLinearRegressor = new SelfPacedLinearRegressor("src/data/meta-test/kin8nm.arff");
 		
-		// SelfPacedRegressor tempSelfPacedRegressor = new
-		// SelfPacedRegressor("src/data/iris.arff", 200);
+		// SelfPacedLinearRegressor tempSelfPacedLinearRegressor = new
+		// SelfPacedLinearRegressor("src/data/iris.arff", 200);
 
-		tempSelfPacedRegressor.randomizeTrainingTesting(0.6);
-		double[] tempWeights = tempSelfPacedRegressor.train();
+		tempSelfPacedLinearRegressor.randomizeTrainingTesting(0.6);
+		double[] tempWeights = tempSelfPacedLinearRegressor.train();
 
-		double tempMAE = tempSelfPacedRegressor.computeTestingMae();
+		double tempMAE = tempSelfPacedLinearRegressor.computeTestingMae();
 		System.out.println("The MAE with selected data is: " + tempMAE);
-		// tempSelfPacedRegressor.select(tempWeights, 3.0);
+		// tempSelfPacedLinearRegressor.select(tempWeights, 3.0);
 
 		// System.out.println("The training mae is: " +
-		// tempSelfPacedRegressor.computeMae());
+		// tempSelfPacedLinearRegressor.computeMae());
 	}// Of main
 
-}// Of class SelfPacedRegressor
+}// Of class SelfPacedLinearRegressor
