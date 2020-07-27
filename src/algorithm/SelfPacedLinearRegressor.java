@@ -11,7 +11,7 @@ import Jama.*;
 import common.SimpleTools;
 
 /**
- * Self-paced regression. <br>
+ * Self-paced linear regression. <br>
  * Project: Self-paced learning.<br>
  * 
  * @author Fan Min<br>
