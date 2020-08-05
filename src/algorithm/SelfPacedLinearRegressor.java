@@ -15,7 +15,7 @@ import common.SimpleTools;
  * Project: Self-paced learning.<br>
  * 
  * @author Fan Min<br>
- *         www.fansmale.com, github.com/fansmale/MFAdaBoosting.<br>
+ *         www.fansmale.com, github.com/fansmale/MFSelfPaced.<br>
  *         Email: minfan@swpu.edu.cn, minfanphd@163.com.<br>
  *         Data Created: July 26, 2020.<br>
  *         Last modified: July 26, 2020.
@@ -68,6 +68,11 @@ public class SelfPacedLinearRegressor {
 	 * The incremental distance threshold.
 	 */
 	double distanceThresholdIncrement = 0.2;
+	
+	/**
+	 * The neighbor fraction threshold.
+	 */
+	double neighborFractionThreshold = 0.9;
 
 	/**
 	 ****************** 
@@ -170,33 +175,50 @@ public class SelfPacedLinearRegressor {
 		System.out.println("Training ... the training set has " + trainingX.length + " instances.");
 		weights = train(trainingX, trainingY);
 		//System.out.println("All data, the weights are: " + Arrays.toString(weights));
-		double tempMAE = computeTestingMae();
-		System.out.println("The MAE with all training data is: " + tempMAE);
+		double tempMae = computeTestingMae();
+		System.out.println("The MAE with all training data is: " + tempMae);
+		double tempRmse = computeTestingRmse();
+		System.out.println("The RMSE with all training data is: " + tempRmse);
 
 		// Step 2. Increase distance gradually.
 		double tempDistanceThreshold = distanceThresholdInitial;
 		double tempNumNeighbors = 0;
 		for (int i = 0; i < 10; i++) {
-			// Step 2.1 Select a subset.
-			int[] tempIndices = select(weights, tempDistanceThreshold);
-			tempNumNeighbors = tempIndices.length;
-
-			double[][] tempX = new double[tempIndices.length][];
-			double[][] tempY = new double[tempIndices.length][];
-			//System.out.println("TrainingY: " + Arrays.deepToString(trainingY));
-			// Copy data
-			for (int j = 0; j < tempX.length; j++) {
-				// System.out.print(", " + tempIndices[j] + ": " +
-				// trainingY[tempIndices[j]][0]);
-				tempX[j] = trainingX[tempIndices[j]];
-				tempY[j] = trainingY[tempIndices[j]];
-			} // Of for j
-
-			// Step 2.2 Update the weights
-			weights = train(tempX, tempY);
+			//Step 2.1 Iterate until converge
+			double[] tempOldWeights = weights;
+			while (true) {
+				// Step 2.1.1 Select a subset.
+				int[] tempIndices = select(weights, tempDistanceThreshold);
+				tempNumNeighbors = tempIndices.length;
+	
+				double[][] tempX = new double[tempIndices.length][];
+				double[][] tempY = new double[tempIndices.length][];
+				//System.out.println("TrainingY: " + Arrays.deepToString(trainingY));
+				// Copy data
+				for (int j = 0; j < tempX.length; j++) {
+					// System.out.print(", " + tempIndices[j] + ": " +
+					// trainingY[tempIndices[j]][0]);
+					tempX[j] = trainingX[tempIndices[j]];
+					tempY[j] = trainingY[tempIndices[j]];
+				} // Of for j
+	
+				// Step 2.1.2 Update the weights
+				weights = train(tempX, tempY);
+				
+				System.out.println("tempOldWeights = " + Arrays.toString(tempOldWeights));
+				System.out.println("weights = " + Arrays.toString(weights));
+				//Step 2.1.3 Compare weights
+				if (SimpleTools.doubleArraysEqual(weights, tempOldWeights)) {
+					System.out.println("Inner loop done!");
+					break;
+				}//Of if
+				
+				System.out.println("Adjusting...");
+				tempOldWeights = weights;
+			}//Of while
 
 			// Step 2.3 Not all data are useful
-			if (tempNumNeighbors > trainingX.length * 0.8) {
+			if (tempNumNeighbors > trainingX.length * neighborFractionThreshold) {
 				// Enough training data are used.
 				break;
 			} // Of if
@@ -322,6 +344,33 @@ public class SelfPacedLinearRegressor {
 
 		return tempErrorSum / testingX.length;
 	}// Of computeTestingMae
+
+	/**
+	 ****************** 
+	 * Compute the root mean squared error on the testing set.
+	 * 
+	 * @param paraInstances
+	 *            The testing set.
+	 * @return The root mean squared error.
+	 ****************** 
+	 */
+	public double computeTestingRmse() {
+		double tempErrorSquareSum = 0;
+
+		for (int i = 0; i < testingX.length; i++) {
+			double tempPredict = 0;
+			for (int j = 0; j < testingX[0].length; j++) {
+				tempPredict += testingX[i][j] * weights[j];
+			}//Of for j
+			
+			tempErrorSquareSum += (tempPredict - testingY[i][0]) * (tempPredict - testingY[i][0]);
+		} // Of for i
+		
+		double tempAveragedErrorSquareSum = tempErrorSquareSum / testingX.length;
+		double tempResult = Math.sqrt(tempAveragedErrorSquareSum);
+
+		return tempResult;
+	}// Of computeTestingMae
 	
 	/**
 	 ****************** 
@@ -345,6 +394,10 @@ public class SelfPacedLinearRegressor {
 
 		double tempMAE = tempSelfPacedLinearRegressor.computeTestingMae();
 		System.out.println("The MAE with selected data is: " + tempMAE);
+		
+		double tempRsme = tempSelfPacedLinearRegressor.computeTestingRmse();
+		System.out.println("The RSME with selected data is: " + tempRsme);
+		
 		// tempSelfPacedLinearRegressor.select(tempWeights, 3.0);
 
 		// System.out.println("The training mae is: " +
