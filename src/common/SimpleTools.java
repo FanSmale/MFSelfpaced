@@ -94,6 +94,40 @@ public class SimpleTools extends Object {
 	}// Of consoleOutput
 
 	/**
+	 ************************************** 
+	 * Perform min-max normalization. Normalize to [0, 1]. The data table is changed
+	 * directly.
+	 * 
+	 * @param paraData : the data set.
+	 * 
+	 ************************************** 
+	 */
+	public static void normalize(Instances paraData) {
+		for (int i = 0; i < paraData.numAttributes(); i++) {
+			double[] tempVals = new double[paraData.numInstances()];
+			double max = Double.MIN_VALUE;
+			double min = Double.MAX_VALUE;
+			for (int j = 0; j < paraData.numInstances(); j++) {
+				tempVals[j] = paraData.instance(j).value(i);
+
+				if (max < tempVals[j]) {
+					max = tempVals[j];
+				} // Of if
+
+				if (min > tempVals[j]) {
+					min = tempVals[j];
+				} // Of if
+
+			} // Of for j
+
+			for (int j = 0; j < paraData.numInstances(); j++) {
+				double newval = (tempVals[j] - min) / (max - min);
+				paraData.instance(j).setValue(i, newval);
+			} // Of for j
+		} // Of for i
+	}//Of normalize
+
+	/**
 	 ********************************** 
 	 * Console output.
 	 * 
