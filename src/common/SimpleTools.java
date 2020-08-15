@@ -223,6 +223,31 @@ public class SimpleTools extends Object {
 	}// Of instanceToDoubleArray
 
 	/**
+	 ************************* 
+	 * Are double arrays equal?
+	 * 
+	 * @param paraArray1
+	 *            The first array.
+	 * @param paraArray2
+	 *            The second array.
+	 * @return True if equal.
+	 ************************* 
+	 */
+	public static boolean doubleArraysEqual(double[] paraArray1, double[] paraArray2) {
+		if (paraArray1.length != paraArray2.length) {
+			return false;
+		} // Of if
+		
+		for (int i = 0; i < paraArray1.length; i++) {
+			if (Math.abs(paraArray1[i] - paraArray2[i]) > 1e-6) {
+				return false;
+			} // Of if
+		} // Of for i
+
+		return true;
+	}// Of doubleArraysEqual
+	
+	/**
 	 ********************************** 
 	 * Convert a double value into a shorter string.
 	 * 
