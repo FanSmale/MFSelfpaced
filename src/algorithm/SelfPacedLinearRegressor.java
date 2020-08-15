@@ -1,9 +1,6 @@
 package algorithm;
 
 import java.io.FileReader;
-import java.util.Arrays;
-
-import weka.core.Instance;
 import weka.core.Instances;
 
 import Jama.*;
@@ -18,7 +15,7 @@ import common.SimpleTools;
  *         www.fansmale.com, github.com/fansmale/MFAdaBoosting.<br>
  *         Email: minfan@swpu.edu.cn, minfanphd@163.com.<br>
  *         Data Created: July 26, 2020.<br>
- *         Last modified: July 26, 2020.
+ *         Last modified: August 15, 2020.
  * @version 1.0
  */
 
